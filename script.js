@@ -183,8 +183,9 @@ let fogo2Largura = 200;
 let fogo2Altura = 200;
 let fogo2X = 50;
 let fogo2Y = 400;
-//------------------------------
+//--------------audios----------------
 let audioPlayed = false;
+let deathAudioPlayed = false;
 
 // funcao para mover os carros
 function moverCarro(carro) {
@@ -231,6 +232,7 @@ window.addEventListener("keydown", (e) => {
         player.y = 450,
         player.with_trash = false;
         player.dead = false;
+        deathAudioPlayed = false;
         score = 0;
         time = 30;
         timeCheck = 30;
@@ -578,26 +580,38 @@ function move() {
          player.y = game.height - player.height;
          player.spr_y = player.y - 20
     }
-
+    
     // COLISÃO CARRO 1
-    if (
-        player.x < carro1.x + carro1.width &&
-        player.x + player.width > carro1.x &&
-        player.y < carro1.y + carro1.height &&
-        player.y + player.height > carro1.y
-    ) {
-        player.dead = true;
+if (
+    player.x < carro1.x + carro1.width &&
+    player.x + player.width > carro1.x &&
+    player.y < carro1.y + carro1.height &&
+    player.y + player.height > carro1.y &&
+    !player.dead // Só executa se o jogador ainda não estiver morto
+) {
+    player.dead = true;
+    if (!deathAudioPlayed) {
+        const audio = new Audio('./assets/wrong.mp3'); // Mesmo som do lixo (ou troque o arquivo)
+        audio.play();
+        deathAudioPlayed = true;
     }
+}
 
-    // COLISÃO COM CARRO 2
-    if (
-        player.x < carro2.x + carro2.width &&
-        player.x + player.width > carro2.x &&
-        player.y < carro2.y + carro2.height &&
-        player.y + player.height > carro2.y
-    ) {
-        player.dead = true;
+// COLISÃO CARRO 2 (mesma lógica)
+if (
+    player.x < carro2.x + carro2.width &&
+    player.x + player.width > carro2.x &&
+    player.y < carro2.y + carro2.height &&
+    player.y + player.height > carro2.y &&
+    !player.dead
+) {
+    player.dead = true;
+    if (!deathAudioPlayed) {
+        const audio = new Audio('./assets/wrong.mp3');
+        audio.play();
+        deathAudioPlayed = true;
     }
+}
 
      // mover carros
       moverCarro(carro1);
