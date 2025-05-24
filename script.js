@@ -184,6 +184,7 @@ let fogo2Altura = 200;
 let fogo2X = 50;
 let fogo2Y = 400;
 //------------------------------
+let audioPlayed = false;
 
 // funcao para mover os carros
 function moverCarro(carro) {
@@ -389,12 +390,20 @@ ctx.fillRect(0, 0, game.width, game.height);
 
     // CHECA COLISÃO E REPOSICIONA O LIXO
     if (trash.x < player.x + player.width && trash.x + trash.width > player.x && trash.y < player.y + player.height && trash.y + trash.height > player.y) {
-        player.with_trash = true;
+    player.with_trash = true;
 
         // APAGA O LIXO
         trash.width = 0;
         trash.height = 0
+        
+        //audio colisao lixo
+        //evita tocar infinitamente... 
+            if (!audioPlayed) {
+        const audio = new Audio('./assets/audio.mp3');
+        audio.play();
+        audioPlayed = true;
     }
+}
 
     // DESENHA O LIXO
     ctx.drawImage(trash_spr, trash.x, trash.y, trash.width, trash.height);
@@ -405,7 +414,7 @@ ctx.fillRect(0, 0, game.width, game.height);
 
     // CHECA COLISÃO E REPOSICIONA O LIXO
     if (player.with_trash) {
-        if (bin.x < player.x + player.width && bin.x + bin.width > player.x && bin.y < player.y + player.height && bin.y + bin.height > player.y) {
+    if (bin.x < player.x + player.width && bin.x + bin.width > player.x && bin.y < player.y + player.height && bin.y + bin.height > player.y) {
             player.with_trash = false;
 
             // TRAZ O LIXO DEVOLTA
@@ -427,9 +436,9 @@ ctx.fillRect(0, 0, game.width, game.height);
 
             document.querySelector("#time").innerHTML = time;
             document.querySelector("#score").innerHTML = score;
+            audioPlayed = false;
         }
     }
-
     // COR E DESENHO DA LIXEIRA
     // ctx.fillStyle = "red";
     // ctx.fillRect(bin.x, bin.y, bin.width, bin.height);
